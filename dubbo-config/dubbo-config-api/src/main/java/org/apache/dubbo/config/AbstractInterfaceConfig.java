@@ -498,6 +498,7 @@ public abstract class AbstractInterfaceConfig extends AbstractMethodConfig {
      *                       side, it is the {@link Class} of the remote service interface that will be referenced
      */
     void checkMock(Class<?> interfaceClass) {
+        System.out.println(mock+"-");
         if (ConfigUtils.isEmpty(mock)) {
             return;
         }

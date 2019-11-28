@@ -20,7 +20,7 @@ import org.apache.dubbo.common.utils.StringUtils;
 
 /**
  * The service consumer default configuration
- *
+ * 实现 AbstractReferenceConfig ，服务消费者缺省值配置
  * @export
  */
 public class ConsumerConfig extends AbstractReferenceConfig {

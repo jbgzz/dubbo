@@ -31,7 +31,7 @@ import static org.apache.dubbo.rpc.Constants.STUB_EVENT_KEY;
 
 /**
  * AbstractConsumerConfig
- *
+ * 实现 AbstractInterfaceConfig ，抽象引用配置类
  * @export
  * @see org.apache.dubbo.config.ReferenceConfig
  */

@@ -164,6 +164,7 @@ public abstract class AbstractConfig implements Serializable {
     /**
      * ConfigCenterConfig组装好后的config，传入此方法，利用反射的原理获取相应的值，最后放入map中
      * 此类生成的parameters会传入Dubbo URL的参数集合（parameters）中
+     * 主要作用是通过这些Config类的getter方法获取其属性值，然后将其属性值设置到map中
      * @param parameters
      * @param config
      * @param prefix
