@@ -34,7 +34,7 @@ import static org.apache.dubbo.config.Constants.ON_THROW_METHOD_KEY;
 
 /**
  * The method configuration
- *
+ * 继承 AbstractMethodConfig ，方法级配置
  * @export
  */
 public class MethodConfig extends AbstractMethodConfig {

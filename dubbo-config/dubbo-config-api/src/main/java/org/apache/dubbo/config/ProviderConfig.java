@@ -39,6 +39,7 @@ import static org.apache.dubbo.remoting.Constants.TELNET;
  * @export
  * @see org.apache.dubbo.config.ProtocolConfig
  * @see org.apache.dubbo.config.ServiceConfig
+ *  实现 AbstractServiceConfig ，服务提供者缺省值配置
  */
 public class ProviderConfig extends AbstractServiceConfig {
 

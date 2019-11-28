@@ -70,7 +70,7 @@ public class ApplicationModel {
     }
 
     public static void initProviderModel(String serviceName, ProviderModel providerModel) {
-        if (PROVIDED_SERVICES.putIfAbsent(serviceName, providerModel) != null) {
+        if (PROVIDED_SERVICES.putIfAbsent(serviceName, providerModel) != null) { //putIfAbsent   如果传入key对应的value已经存在，就返回存在的value，不进行替换。如果不存在，就添加key和value，返回null
             LOGGER.warn("Already register the same:" + serviceName);
         }
     }

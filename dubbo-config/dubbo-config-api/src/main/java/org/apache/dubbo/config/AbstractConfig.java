@@ -177,7 +177,7 @@ public abstract class AbstractConfig implements Serializable {
         for (Method method : methods) {
             try {
                 String name = method.getName();
-                if (MethodUtils.isGetter(method)) {
+                if (MethodUtils.isGetter(method)) { //只取Getter方法
                     Parameter parameter = method.getAnnotation(Parameter.class);    //通过method.getAnnotation获取ConfigCenterConfig类里面方法是否有@Parameter()注解和值  Parameter-->定义的注解类
                     if (method.getReturnType() == Object.class || parameter != null && parameter.excluded()) {
                         continue;

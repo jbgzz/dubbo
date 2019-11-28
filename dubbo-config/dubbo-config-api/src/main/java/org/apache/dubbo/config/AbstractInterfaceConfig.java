@@ -90,7 +90,7 @@ import static org.apache.dubbo.rpc.cluster.Constants.TAG_KEY;
 
 /**
  * AbstractDefaultConfig
- *
+ * 继承 AbstractMethodConfig ，抽象接口配置类
  * @export
  */
 public abstract class AbstractInterfaceConfig extends AbstractMethodConfig {
@@ -98,12 +98,24 @@ public abstract class AbstractInterfaceConfig extends AbstractMethodConfig {
     private static final long serialVersionUID = -1559314110797223229L;
 
     /**
-     * Local impl class name for the service interface
+     * local impl class name for the service interface
+     * 服务接口客户端本地代理类名，用于在客户端执行本地逻辑，如本地缓存等。
+     *
+     * 该本地代理类的构造函数必须允许传入远程代理对象，构造函数如：public XxxServiceLocal(XxxService xxxService)
+     *
+     * 设为 true，表示使用缺省代理类名，即：接口名 + Local 后缀
      */
     protected String local;
 
     /**
-     * Local stub class name for the service interface
+     * local stub class name for the service interface
+     * 服务接口客户端本地代理类名，用于在客户端执行本地逻辑，如本地缓存等。
+     *
+     * 该本地代理类的构造函数必须允许传入远程代理对象，构造函数如：public XxxServiceStub(XxxService xxxService)
+     *
+     * 设为 true，表示使用缺省代理类名，即：接口名 + Stub 后缀
+     *
+     * 参见文档 <a href="本地存根">http://dubbo.io/books/dubbo-user-book/demos/local-stub.html</>
      */
     protected String stub;
 
@@ -191,6 +203,7 @@ public abstract class AbstractInterfaceConfig extends AbstractMethodConfig {
 
     /**
      * Check whether the registry config is exists, and then conversion it to {@link RegistryConfig}
+     * 校验 RegistryConfig 配置。实际上，该方法会初始化 RegistryConfig 的配置属性
      */
     protected void checkRegistry() {
         loadRegistriesFromBackwardConfig();
@@ -207,9 +220,12 @@ public abstract class AbstractInterfaceConfig extends AbstractMethodConfig {
         useRegistryForConfigIfNecessary();
     }
 
+    /**
+     * 校验 ApplicationConfig 配置。实际上，该方法会初始化 ApplicationConfig 的配置属性。
+     */
     @SuppressWarnings("deprecation")
     protected void checkApplication() {
-        // for backward compatibility
+        // for backward compatibility 向后兼容
         createApplicationIfAbsent();
 
         if (!application.isValid()) {
@@ -220,7 +236,7 @@ public abstract class AbstractInterfaceConfig extends AbstractMethodConfig {
         ApplicationModel.setApplication(application.getName());
 
         // backward compatibility
-        String wait = ConfigUtils.getProperty(SHUTDOWN_WAIT_KEY);
+        String wait = ConfigUtils.getProperty(SHUTDOWN_WAIT_KEY);   // 初始化优雅停机的超时时长
         if (wait != null && wait.trim().length() > 0) {
             System.setProperty(SHUTDOWN_WAIT_KEY, wait.trim());
         } else {
@@ -320,6 +336,7 @@ public abstract class AbstractInterfaceConfig extends AbstractMethodConfig {
      *
      * Load the registry and conversion it to {@link URL}, the priority order is: system property > dubbo registry config
      *
+     * 从 RegistryConfig 中获取协议配置属性然后封装成 org.apache.dubbo.common.URL ,返回协议列表,然后遍历列表,把服务以不同的协议以 URL 形式暴露
      * @param provider whether it is the provider side
      * @return
      */
@@ -405,7 +422,7 @@ public abstract class AbstractInterfaceConfig extends AbstractMethodConfig {
         }
         return null;
     }
-
+    //// 将 `dubbo`，`release`，`timestamp`，`pid` 参数，添加到 `map` 集合中。
     static void appendRuntimeParameters(Map<String, String> map) {
         map.put(DUBBO_VERSION_KEY, Version.getProtocolVersion());
         map.put(RELEASE_KEY, Version.getVersion());
@@ -437,8 +454,11 @@ public abstract class AbstractInterfaceConfig extends AbstractMethodConfig {
      * Check whether the remote service interface and the methods meet with Dubbo's requirements.it mainly check, if the
      * methods configured in the configuration file are included in the interface of remote service
      *
-     * @param interfaceClass the interface of remote service
-     * @param methods the methods configured
+     * @param interfaceClass the interface of remote service 接口类
+     * @param methods the methods configured 方法数组
+     *  方法，校验接口和方法。主要是两方面：
+     * 1、 接口类非空，并是接口
+     * 2、 方法在接口中已定义
      */
     protected void checkInterfaceAndMethods(Class<?> interfaceClass, List<MethodConfig> methods) {
         // interface cannot be null
@@ -546,12 +566,20 @@ public abstract class AbstractInterfaceConfig extends AbstractMethodConfig {
     private void convertRegistryIdsToRegistries() {
         if (StringUtils.isEmpty(registryIds) && CollectionUtils.isEmpty(registries)) {
             Set<String> configedRegistries = new HashSet<>();
-            configedRegistries.addAll(getSubProperties(Environment.getInstance().getExternalConfigurationMap(),
+            configedRegistries.addAll(getSubProperties(Environment.getInstance().getExternalConfigurationMap(),         //---》》单例模式
                     REGISTRIES_SUFFIX));
             configedRegistries.addAll(getSubProperties(Environment.getInstance().getAppExternalConfigurationMap(),
                     REGISTRIES_SUFFIX));
 
-            registryIds = String.join(COMMA_SEPARATOR, configedRegistries);
+            registryIds = String.join(COMMA_SEPARATOR, configedRegistries);  //-->Java8中String.join方法   例如：------------------》》》》》》》》》
+            //接上 》》》》》》》》》》》
+            //List names=new ArrayList<String>();
+            //names.add("1");
+            //names.add("2");
+            //names.add("3");
+            //System.out.println(String.join("-", names));    ----》》》输出 1-2-3
+
+
         }
 
         if (StringUtils.isEmpty(registryIds)) {
@@ -590,6 +618,9 @@ public abstract class AbstractInterfaceConfig extends AbstractMethodConfig {
 
     }
 
+    /**
+     * 当 RegistryConfig 对象数组为空时，若有 `dubbo.registry.address` 配置，进行创建。
+     */
     private void loadRegistriesFromBackwardConfig() {
         // for backward compatibility
         // -Ddubbo.registry.address is now deprecated.
@@ -742,6 +773,7 @@ public abstract class AbstractInterfaceConfig extends AbstractMethodConfig {
         this.application = application;
     }
 
+    // 当 ApplicationConfig 对象为空时，若有 `dubbo.application.name` 配置，进行创建。
     private void createApplicationIfAbsent() {
         if (this.application != null) {
             return;

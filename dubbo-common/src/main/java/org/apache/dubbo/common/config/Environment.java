@@ -43,6 +43,7 @@ public class Environment {
 
     /**
      * FIXME, this instance will always be a type of DynamicConfiguration, ConfigCenterConfig will load the instance at startup and assign it to here.
+     *  他的实例将始终是DynamicConfiguration类型，ConfigCenterConfig将在启动时加载该实例并将其分配给此处。
      */
     private Configuration dynamicConfiguration;
 

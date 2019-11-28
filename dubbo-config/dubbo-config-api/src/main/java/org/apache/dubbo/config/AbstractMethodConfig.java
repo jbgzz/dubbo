@@ -30,7 +30,7 @@ import static org.apache.dubbo.rpc.Constants.THROW_PREFIX;
 
 /**
  * AbstractMethodConfig
- *
+ * 方法级配置的抽象类
  * @export
  */
 public abstract class AbstractMethodConfig extends AbstractConfig {

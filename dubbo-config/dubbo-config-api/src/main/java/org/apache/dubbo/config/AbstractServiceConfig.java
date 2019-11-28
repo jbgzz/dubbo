@@ -33,7 +33,7 @@ import static org.apache.dubbo.rpc.Constants.TOKEN_KEY;
 
 /**
  * AbstractServiceConfig
- *
+ * 实现 AbstractInterfaceConfig ，抽象服务配置类
  * @export
  */
 public abstract class AbstractServiceConfig extends AbstractInterfaceConfig {
