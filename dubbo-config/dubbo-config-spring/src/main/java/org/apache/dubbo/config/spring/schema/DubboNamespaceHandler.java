@@ -35,7 +35,7 @@ import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
 
 /**
  * DubboNamespaceHandler
- *
+ *  Dubbo 的 XML Namespace 的处理器
  * @export
  */
 public class DubboNamespaceHandler extends NamespaceHandlerSupport {
@@ -44,6 +44,9 @@ public class DubboNamespaceHandler extends NamespaceHandlerSupport {
         Version.checkDuplicate(DubboNamespaceHandler.class);
     }
 
+    /**
+     * 在 #init() 方法，定义了每个 <xsd:element /> 对应的 org.springframework.beans.factory.xml.BeanDefinitionParser ，代码如下：
+     */
     @Override
     public void init() {
         registerBeanDefinitionParser("application", new DubboBeanDefinitionParser(ApplicationConfig.class, true));

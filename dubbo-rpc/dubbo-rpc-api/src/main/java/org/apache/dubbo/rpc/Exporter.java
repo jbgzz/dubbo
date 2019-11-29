@@ -22,18 +22,19 @@ package org.apache.dubbo.rpc;
  * @see org.apache.dubbo.rpc.Protocol#export(Invoker)
  * @see org.apache.dubbo.rpc.ExporterListener
  * @see org.apache.dubbo.rpc.protocol.AbstractExporter
+ * Exporter ，Invoker 暴露服务在 Protocol 上的对象。
  */
 public interface Exporter<T> {
 
     /**
      * get invoker.
-     *
+     * 获得对应的 Invoker
      * @return invoker
      */
     Invoker<T> getInvoker();
 
     /**
-     * unexport.
+     * unexport. 取消暴露
      * <p>
      * <code>
      * getInvoker().destroy();

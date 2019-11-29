@@ -37,12 +37,13 @@ import java.util.function.BiConsumer;
  * @serial Don't change the class name and package name.
  * @see org.apache.dubbo.rpc.Invoker#invoke(Invocation)
  * @see AppResponse
+ * Result 是会话域，它持有调用过程中返回值，异常等。
  */
 public interface Result extends CompletionStage<Result>, Future<Result>, Serializable {
 
     /**
      * Get invoke result.
-     *
+     * 获得返回值。
      * @return result. if no result return null.
      */
     Object getValue();
@@ -51,7 +52,7 @@ public interface Result extends CompletionStage<Result>, Future<Result>, Seriali
 
     /**
      * Get exception.
-     *
+     * 获得返回的异常。
      * @return exception. if no exception return null.
      */
     Throwable getException();
@@ -60,7 +61,7 @@ public interface Result extends CompletionStage<Result>, Future<Result>, Seriali
 
     /**
      * Has exception.
-     *
+     * 是否有异常。
      * @return has exception.
      */
     boolean hasException();

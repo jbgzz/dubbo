@@ -20,6 +20,7 @@ import org.apache.dubbo.common.extension.SPI;
 
 /**
  * ExporterListener. (SPI, Singleton, ThreadSafe)
+ * Exporter 监听器
  */
 @SPI
 public interface ExporterListener {
@@ -27,18 +28,22 @@ public interface ExporterListener {
     /**
      * The exporter exported.
      *
+     * 当服务暴露完成
+     *
      * @param exporter
      * @throws RpcException
-     * @see org.apache.dubbo.rpc.Protocol#export(Invoker)
+     * @see com.alibaba.dubbo.rpc.Protocol#export(Invoker)
      */
     void exported(Exporter<?> exporter) throws RpcException;
 
     /**
      * The exporter unexported.
      *
+     * 当服务取消暴露完成
+     *
      * @param exporter
      * @throws RpcException
-     * @see org.apache.dubbo.rpc.Exporter#unexport()
+     * @see com.alibaba.dubbo.rpc.Exporter#unexport()
      */
     void unexported(Exporter<?> exporter);
 

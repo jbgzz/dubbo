@@ -24,6 +24,7 @@ import org.apache.dubbo.common.Node;
  * @see org.apache.dubbo.rpc.Protocol#refer(Class, org.apache.dubbo.common.URL)
  * @see org.apache.dubbo.rpc.InvokerListener
  * @see org.apache.dubbo.rpc.protocol.AbstractInvoker
+ *  Invoker 是实体域，它是 Dubbo 的核心模型，其它模型都向它靠扰，或转换成它。 它代表一个可执行体，可向它发起 invoke 调用。 它有可能是一个本地的实现，也可能是一个远程的实现，也可能一个集群实现。
  */
 public interface Invoker<T> extends Node {
 
@@ -31,6 +32,7 @@ public interface Invoker<T> extends Node {
      * get service interface.
      *
      * @return service interface.
+     *  获得 Service 接口
      */
     Class<T> getInterface();
 
@@ -40,6 +42,7 @@ public interface Invoker<T> extends Node {
      * @param invocation
      * @return result
      * @throws RpcException
+     * 调用方法
      */
     Result invoke(Invocation invocation) throws RpcException;
 

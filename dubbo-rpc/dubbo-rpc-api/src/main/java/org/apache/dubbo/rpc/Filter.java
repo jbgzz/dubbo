@@ -39,6 +39,7 @@ import org.apache.dubbo.common.extension.SPI;
  * @see org.apache.dubbo.rpc.filter.EchoFilter
  * @see org.apache.dubbo.rpc.filter.TokenFilter
  * @see org.apache.dubbo.rpc.filter.TpsLimitFilter
+ *  过滤器接口 ，和我们平时理解的 javax.servlet.Filter 基本一致。
  */
 @SPI
 public interface Filter {

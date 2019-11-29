@@ -55,11 +55,15 @@ public class DubboConfigBindingBeanPostProcessor implements BeanPostProcessor, A
 
     /**
      * The prefix of Configuration Properties
+     *
+     * 配置属性的前缀
      */
     private final String prefix;
 
     /**
      * Binding Bean Name
+     *
+     * Bean 的名字
      */
     private final String beanName;
 
@@ -67,8 +71,15 @@ public class DubboConfigBindingBeanPostProcessor implements BeanPostProcessor, A
 
     private ApplicationContext applicationContext;
 
+    /**
+     * 是否忽略位置的属性
+     */
     private boolean ignoreUnknownFields = true;
 
+
+    /**
+     * 是否忽略类型不对的属性
+     */
     private boolean ignoreInvalidFields = true;
 
     private List<DubboConfigBeanCustomizer> configBeanCustomizers = Collections.emptyList();
@@ -164,6 +175,7 @@ public class DubboConfigBindingBeanPostProcessor implements BeanPostProcessor, A
 
     private void initDubboConfigBinder() {
 
+        // 获得（创建）DubboConfigBinder 对象
         if (dubboConfigBinder == null) {
             try {
                 dubboConfigBinder = applicationContext.getBean(DubboConfigBinder.class);
@@ -176,6 +188,7 @@ public class DubboConfigBindingBeanPostProcessor implements BeanPostProcessor, A
             }
         }
 
+        // 设置 ignoreUnknownFields、ignoreInvalidFields 属性
         dubboConfigBinder.setIgnoreUnknownFields(ignoreUnknownFields);
         dubboConfigBinder.setIgnoreInvalidFields(ignoreInvalidFields);
 
@@ -198,7 +211,9 @@ public class DubboConfigBindingBeanPostProcessor implements BeanPostProcessor, A
      * @return {@link DefaultDubboConfigBinder}
      */
     protected DubboConfigBinder createDubboConfigBinder(Environment environment) {
+        // 创建 DefaultDubboConfigBinder 对象
         DefaultDubboConfigBinder defaultDubboConfigBinder = new DefaultDubboConfigBinder();
+        // 设置 environment 属性
         defaultDubboConfigBinder.setEnvironment(environment);
         return defaultDubboConfigBinder;
     }

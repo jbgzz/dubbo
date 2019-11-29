@@ -51,7 +51,7 @@ public @interface DubboComponentScan {
      */
     String[] value() default {};
 
-    /**
+    /**  要扫描的包的数组
      * Base packages to scan for annotated @Service classes. {@link #value()} is an
      * alias for (and mutually exclusive with) this attribute.
      * <p>
@@ -62,7 +62,7 @@ public @interface DubboComponentScan {
      */
     String[] basePackages() default {};
 
-    /**
+    /** 要扫描的类的数组
      * Type-safe alternative to {@link #basePackages()} for specifying the packages to
      * scan for annotated @Service classes. The package of each class specified will be
      * scanned.

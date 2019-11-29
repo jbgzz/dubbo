@@ -38,13 +38,17 @@ public class Application {
     }
 
     @Configuration
+    /**
+     * 可以在指定的包名下（通过 scanBasePackages 属性），或者指定的类中（通过 scanBasePackageClasses 属性）扫描 Dubbo 的服务提供者（以 @Service 注解）以及 Dubbo 的服务消费者（以 @Reference 注解）。
+     * 扫描到 Dubbo 的服务提供方和消费者之后，对其做相应的组装并初始化，并最终完成服务暴露或者引用的工作
+     */
     @EnableDubbo(scanBasePackages = "org.apache.dubbo.demo.provider")
     @PropertySource("classpath:/spring/dubbo-provider.properties")
     static class ProviderConfiguration {
         @Bean
         public RegistryConfig registryConfig() {
             RegistryConfig registryConfig = new RegistryConfig();
-            registryConfig.setAddress("multicast://224.5.6.7:1234");
+            registryConfig.setAddress("zookeeper://192.168.1.5:2181");
             return registryConfig;
         }
     }

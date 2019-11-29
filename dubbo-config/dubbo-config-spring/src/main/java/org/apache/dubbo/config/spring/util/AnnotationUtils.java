@@ -121,16 +121,20 @@ public class AnnotationUtils {
     public static Class<?> resolveServiceInterfaceClass(AnnotationAttributes attributes, Class<?> defaultInterfaceClass)
             throws IllegalArgumentException {
 
+
         ClassLoader classLoader = defaultInterfaceClass != null ? defaultInterfaceClass.getClassLoader() : Thread.currentThread().getContextClassLoader();
 
+        // 首先，从注解本身上获得
         Class<?> interfaceClass = getAttribute(attributes, "interfaceClass");
 
         if (void.class.equals(interfaceClass)) { // default or set void.class for purpose.
 
             interfaceClass = null;
 
+            // 获得 @Service 注解的 interfaceName 属性。
             String interfaceClassName = getAttribute(attributes, "interfaceName");
 
+            // 如果存在，获得其对应的类
             if (hasText(interfaceClassName)) {
                 if (ClassUtils.isPresent(interfaceClassName, classLoader)) {
                     interfaceClass = resolveClassName(interfaceClassName, classLoader);
@@ -139,6 +143,7 @@ public class AnnotationUtils {
 
         }
 
+        // <X>【一般情况下，使用这个】获得不到，则从被注解的类上获得其实现的首个接口
         if (interfaceClass == null && defaultInterfaceClass != null) {
             // Find all interfaces from the annotated class
             // To resolve an issue : https://github.com/apache/dubbo/issues/3251

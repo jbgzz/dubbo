@@ -33,18 +33,21 @@ import static org.apache.dubbo.config.spring.util.AnnotatedBeanDefinitionRegistr
  * @see DubboConfigConfiguration
  * @see Ordered
  * @since 2.5.8
+ * 实现 ImportBeanDefinitionRegistrar 接口，处理 @EnableDubboConfig 注解，注册相应的 DubboConfigConfiguration 到 Spring 容器中
  */
 public class DubboConfigConfigurationRegistrar implements ImportBeanDefinitionRegistrar {
 
     @Override
     public void registerBeanDefinitions(AnnotationMetadata importingClassMetadata, BeanDefinitionRegistry registry) {
 
+        // 获得 @EnableDubboConfig 注解的属性
         AnnotationAttributes attributes = AnnotationAttributes.fromMap(
                 importingClassMetadata.getAnnotationAttributes(EnableDubboConfig.class.getName()));
 
+        // 获得 multiple 属性
         boolean multiple = attributes.getBoolean("multiple");
 
-        // Single Config Bindings
+        // Single Config Bindings注册相应的 DubboConfigConfiguration 到 Spring 容器中
         registerBeans(registry, DubboConfigConfiguration.Single.class);
 
         if (multiple) { // Since 2.6.6 https://github.com/apache/dubbo/issues/3193

@@ -146,6 +146,12 @@ public abstract class AbstractConfig implements Serializable {
         return value;
     }
 
+    /**
+     * 获取类名对应的属性标签，例如，ServiceConfig 对应为 service 。
+     *
+     * @param cls 类名
+     * @return 标签
+     */
     private static String getTagName(Class<?> cls) {
         String tag = cls.getSimpleName();
         for (String suffix : SUFFIXES) {
@@ -238,7 +244,7 @@ public abstract class AbstractConfig implements Serializable {
 
     /**
      * 将带有 @Parameter(attribute = true) 配置对象的属性，添加到参数集合
-     *
+     * 读取启动参数变量和 properties 配置到配置对象
      * @param parameters 参数集合
      * @param config 配置对象
      * @param prefix 前缀
