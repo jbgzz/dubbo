@@ -85,18 +85,21 @@ public class AdaptiveClassCodeGenerator {
      */
     public String generate() {
         // no need to generate adaptive class since there's no adaptive method found.
-        if (!hasAdaptiveMethod()) {
+        // 遍历方法数组，判断有 @Adaptive 注解
+        if (!hasAdaptiveMethod()) {  //java8写法
             throw new IllegalStateException("No adaptive method exist on extension " + type.getName() + ", refuse to create the adaptive class!");
         }
 
         StringBuilder code = new StringBuilder();
+        // 生成代码：package 和 import
         code.append(generatePackageInfo());
         code.append(generateImports());
+        // 生成代码：类名
         code.append(generateClassDeclaration());
         
         Method[] methods = type.getMethods();
         for (Method method : methods) {
-            code.append(generateMethod(method));
+            code.append(generateMethod(method)); //生成方法
         }
         code.append("}");
         
@@ -153,16 +156,17 @@ public class AdaptiveClassCodeGenerator {
      * generate method declaration
      */
     private String generateMethod(Method method) {
-        String methodReturnType = method.getReturnType().getCanonicalName();
-        String methodName = method.getName();
-        String methodContent = generateMethodContent(method);
-        String methodArgs = generateMethodArguments(method);
-        String methodThrows = generateMethodThrows(method);
+        String methodReturnType = method.getReturnType().getCanonicalName(); // 返回类型
+        String methodName = method.getName();   //方法名称
+        String methodContent = generateMethodContent(method); // 方法体的代码
+        String methodArgs = generateMethodArguments(method); // 参数类型数组
+        String methodThrows = generateMethodThrows(method); // 异常类型数组
         return String.format(CODE_METHOD_DECLARATION, methodReturnType, methodName, methodArgs, methodThrows, methodContent);
     }
 
     /**
      * generate method arguments
+     * // 参数类型数组
      */
     private String generateMethodArguments(Method method) {
         Class<?>[] pts = method.getParameterTypes();
@@ -193,6 +197,7 @@ public class AdaptiveClassCodeGenerator {
     
     /**
      * generate method content
+     * // 方法体的代码
      */
     private String generateMethodContent(Method method) {
         Adaptive adaptiveAnnotation = method.getAnnotation(Adaptive.class);
@@ -200,23 +205,29 @@ public class AdaptiveClassCodeGenerator {
         if (adaptiveAnnotation == null) {
             return generateUnsupported(method);
         } else {
+            // 寻找 Dubbo URL 参数的位置
             int urlTypeIndex = getUrlTypeIndex(method);
             
             // found parameter in URL type
+            // 有类型为URL的参数，生成代码：生成校验 URL 非空的代码
             if (urlTypeIndex != -1) {
                 // Null Point check
                 code.append(generateUrlNullCheck(urlTypeIndex));
             } else {
                 // did not find parameter in URL type
+                // 参数没有URL类型
                 code.append(generateUrlAssignmentIndirectly(method));
             }
 
+            // 没有设置Key，则使用“扩展点接口名的点分隔 作为Key
             String[] value = getMethodAdaptiveValue(adaptiveAnnotation);
 
+
             boolean hasInvocation = hasInvocationArgument(method);
-            
+
+            // 判断是否有 Invocation 参数
             code.append(generateInvocationArgumentNullCheck(method));
-            
+            //获得最终拓展名的代码字符串，
             code.append(generateExtNameAssignment(value, hasInvocation));
             // check extName == null?
             code.append(generateExtNameNullCheck(value));
@@ -239,20 +250,23 @@ public class AdaptiveClassCodeGenerator {
 
     /**
      * generate extName assigment code
+     *  // 获得最终拓展名的代码字符串，例如：
+     *  【简单】1. url.getParameter("proxy", "javassist")
+     *   【复杂】2. url.getParameter(key1, url.getParameter(key2, defaultExtName))
      */
     private String generateExtNameAssignment(String[] value, boolean hasInvocation) {
         // TODO: refactor it
         String getNameCode = null;
-        for (int i = value.length - 1; i >= 0; --i) {
+        for (int i = value.length - 1; i >= 0; --i) { // 倒序的原因，因为是顺序获取参数，参见【复杂】2. 的例子
             if (i == value.length - 1) {
                 if (null != defaultExtName) {
                     if (!"protocol".equals(value[i])) {
-                        if (hasInvocation) {
+                        if (hasInvocation) {  // 当【有】 Invocation 参数时，使用 `URL#getMethodParameter()` 方法。
                             getNameCode = String.format("url.getMethodParameter(methodName, \"%s\", \"%s\")", value[i], defaultExtName);
-                        } else {
+                        } else { // 当【非】 Invocation 参数时，使用 `URL#getParameter()` 方法。
                             getNameCode = String.format("url.getParameter(\"%s\", \"%s\")", value[i], defaultExtName);
                         }
-                    } else {
+                    } else { // 当属性名是 "protocol" ，使用 `URL#getProtocl()` 方法获取。
                         getNameCode = String.format("( url.getProtocol() == null ? \"%s\" : url.getProtocol() )", defaultExtName);
                     }
                 } else {
@@ -324,6 +338,7 @@ public class AdaptiveClassCodeGenerator {
     private String[] getMethodAdaptiveValue(Adaptive adaptiveAnnotation) {
         String[] value = adaptiveAnnotation.value();
         // value is not set, use the value generated from class name as the key
+        // 没有设置Key，则使用“扩展点接口名的点分隔 作为Key
         if (value.length == 0) {
             String splitName = StringUtils.camelToSplitName(type.getSimpleName(), ".");
             value = new String[]{splitName};
@@ -337,6 +352,7 @@ public class AdaptiveClassCodeGenerator {
      * test if parameter has method which returns type <code>URL</code>
      * <p>
      * if not found, throws IllegalStateException
+     * // 找到参数的URL属性 。例如，Invoker 有 `#getURL()` 方法。
      */
     private String generateUrlAssignmentIndirectly(Method method) {
         Class<?>[] pts = method.getParameterTypes();

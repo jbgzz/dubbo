@@ -37,6 +37,10 @@ import java.util.Set;
 /**
  * SpringExtensionFactory
  */
+
+/**
+ * Spring Context 集合
+ */
 public class SpringExtensionFactory implements ExtensionFactory {
     private static final Logger logger = LoggerFactory.getLogger(SpringExtensionFactory.class);
 
@@ -76,7 +80,9 @@ public class SpringExtensionFactory implements ExtensionFactory {
 
         for (ApplicationContext context : CONTEXTS) {
             if (context.containsBean(name)) {
+                // 获得属性
                 Object bean = context.getBean(name);
+                // 判断类型
                 if (type.isInstance(bean)) {
                     return (T) bean;
                 }
